@@ -1,5 +1,6 @@
 from cmath import pi
 from random import randint
+import itertools
 
 def toOunces(grams):
     return grams * 28.3495231
@@ -26,7 +27,7 @@ def filterPrimes(numbers):
     return filteredNumbers
 
 def findAllPermutations(string):
-    pass
+    return list(itertools.permutations(string))
 
 def reverse(text):
     words = text.split(' ')
@@ -93,3 +94,4 @@ def guessTheNumber():
         guesses = guesses + 1
     print(f'Good job, {name}! You guessed my number in {guesses} guesses!')
         
+
