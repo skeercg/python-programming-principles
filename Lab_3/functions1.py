@@ -93,5 +93,3 @@ def guessTheNumber():
         y = int(input())
         guesses = guesses + 1
     print(f'Good job, {name}! You guessed my number in {guesses} guesses!')
-        
-
