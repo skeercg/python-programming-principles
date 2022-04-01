@@ -46,7 +46,7 @@ while True:
         currentTrack %= 2
         mixer.music.stop()
         mixer.music.unload()
-        if (currentTrack == 1):
+        if (currentTrack == 0):
             mixer.music.load('track_1.wav')
         else:
             mixer.music.load('track_2.wav')
@@ -58,7 +58,7 @@ while True:
         currentTrack %= 2
         mixer.music.stop()
         mixer.music.unload()
-        if (currentTrack == 1):
+        if (currentTrack == 0):
             mixer.music.load('track_1.wav')
         else:
             mixer.music.load('track_2.wav')
@@ -83,4 +83,5 @@ while True:
     pygame.draw.polygon(screen, (255, 255, 255), [(305, 250), (285, 260), (285, 240)])
 
     pygame.display.update()
-    clock.tick(24)
+    sleep(0.2)
+
