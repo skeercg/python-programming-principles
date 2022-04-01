@@ -24,5 +24,4 @@ while True:
     if key_input[pygame.K_DOWN]:
         if (y + step <= 375):
             y += step
-    print(x, y)
     pygame.display.update()
