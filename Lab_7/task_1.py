@@ -2,8 +2,6 @@ import datetime
 import pygame
 
 pygame.init()
-theFont=pygame.font.Font(None,72)
-clock = pygame.time.Clock()
 screen = pygame.display.set_mode((934, 700))
 bg = pygame.image.load('bg.jpeg')
 bg = pygame.transform.scale(bg, (934, 700))
