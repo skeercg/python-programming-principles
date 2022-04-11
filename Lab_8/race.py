@@ -33,7 +33,6 @@ background = pygame.image.load("Lab_8/AnimatedStreet.png")
 #Create a white screen 
 DISPLAYSURF = pygame.display.set_mode((400,600))
 DISPLAYSURF.fill(WHITE)
-pygame.display.set_caption("Game")
 
 
 class Enemy(pygame.sprite.Sprite):

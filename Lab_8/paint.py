@@ -70,23 +70,47 @@ def main():
             
             if circ:
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    position = event.pos
+                    circ_start_x, circ_start_y = position
+                    
+                    # print ("START", rect_start_x, rect_start_y)
+                
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    circ_finish_x, circ_finish_y = position
+                    
+                    # print ("FINISH", rect_finish_x, rect_finish_y)
                     if mode == 'blue':
                         color = (0, 0, 255)
                     elif mode == 'red':
                         color = (255, 0, 0)
                     elif mode == 'green':
                         color = (0, 255, 0)
-                    obj = obj + [(pygame.mouse.get_pos(), color, 0)]
+                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0))
+                    pygame.display.flip()
 
             if rect:
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    position = event.pos
+                    rect_start_x, rect_start_y = position
+                    
+                    # print ("START", rect_start_x, rect_start_y)
+                
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    rect_finish_x, rect_finish_y = position
+                    
+                    # print ("FINISH", rect_finish_x, rect_finish_y)
                     if mode == 'blue':
                         color = (0, 0, 255)
                     elif mode == 'red':
                         color = (255, 0, 0)
                     elif mode == 'green':
                         color = (0, 255, 0)
-                    obj = obj + [(pygame.mouse.get_pos(), color, 1)]
+                    cor = [(rect_start_x, rect_start_y), (rect_finish_x, rect_finish_y)]
+                    cor = sorted(cor)
+                    obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1))
+                    pygame.display.flip()
 
             if eraser:
                 if event.type == pygame.MOUSEMOTION:
@@ -102,7 +126,6 @@ def main():
                 #         radius = min(200, radius + 1)
                 #     elif event.button == 3: # right click shrinks radius
                 #         radius = max(1, radius - 1)
-                
                 if event.type == pygame.MOUSEMOTION:
                     # if mouse moved, add point to list
                     position = event.pos
@@ -115,9 +138,9 @@ def main():
         i = 0
         while i < len(obj):
             if obj[i][2]:
-                pygame.draw.rect(screen, obj[i][1], (obj[i][0][0], obj[i][0][1], 60, 50))
+                pygame.draw.rect(screen, obj[i][1], obj[i][0])
             else:
-                pygame.draw.circle(screen, obj[i][1], (obj[i][0][0], obj[i][0][1]), 25)
+                pygame.draw.ellipse(screen, obj[i][1], obj[i][0])
             i += 1
 
         i = 0
