@@ -9,8 +9,6 @@ def main():
     clock = pygame.time.Clock()
     
     radius = 15
-    x = 0
-    y = 0
     mode = 'blue'
     points = []
     obj = []
