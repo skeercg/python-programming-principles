@@ -18,6 +18,7 @@ def main():
     drawer = True
     rect = False
     circ = False
+    drag_start = False
     
 
     while True:
@@ -69,13 +70,12 @@ def main():
                     rect = False
             
             if circ:
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
                     position = event.pos
                     circ_start_x, circ_start_y = position
-                    
+                    drag_start = True
                     # print ("START", rect_start_x, rect_start_y)
-                
-                elif event.type == pygame.MOUSEBUTTONUP:
+                elif event.type == pygame.MOUSEMOTION and drag_start:
                     position = event.pos
                     circ_finish_x, circ_finish_y = position
                     
@@ -86,20 +86,50 @@ def main():
                         color = (255, 0, 0)
                     elif mode == 'green':
                         color = (0, 255, 0)
+                    if len(obj) > 0: 
+                        obj.pop()
                     obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0))
-                    pygame.display.flip()
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    circ_finish_x, circ_finish_y = position
+                    drag_start = False
+                    # print ("FINISH", rect_finish_x, rect_finish_y)
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0))
 
             if rect:
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
                     position = event.pos
                     rect_start_x, rect_start_y = position
+                    drag_start = True
                     
                     # print ("START", rect_start_x, rect_start_y)
-                
+                elif event.type == pygame.MOUSEMOTION and drag_start:
+                    position = event.pos
+                    rect_finish_x, rect_finish_y = position
+                    # print ("FINISH", rect_finish_x, rect_finish_y)
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    cor = [(rect_start_x, rect_start_y), (rect_finish_x, rect_finish_y)]
+                    cor = sorted(cor)
+                    if len(obj) > 0: 
+                        obj.pop()
+                    obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1))
+                    
                 elif event.type == pygame.MOUSEBUTTONUP:
                     position = event.pos
                     rect_finish_x, rect_finish_y = position
-                    
+                    drag_start = False
                     # print ("FINISH", rect_finish_x, rect_finish_y)
                     if mode == 'blue':
                         color = (0, 0, 255)
@@ -110,7 +140,7 @@ def main():
                     cor = [(rect_start_x, rect_start_y), (rect_finish_x, rect_finish_y)]
                     cor = sorted(cor)
                     obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1))
-                    pygame.display.flip()
+                    
 
             if eraser:
                 if event.type == pygame.MOUSEMOTION:
