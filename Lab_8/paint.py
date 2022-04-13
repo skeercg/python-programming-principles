@@ -12,6 +12,7 @@ def main():
     mode = 'blue'
     points = []
     obj = []
+    order = []
     eraser = False
     drawer = True
     rect = False

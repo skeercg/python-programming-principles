@@ -17,7 +17,6 @@ def score_view(score, level):
     screen.blit(value, [0, 0])
  
  
- 
 def our_snake(snake_block, snake_list):
     for x in snake_list:
         pygame.draw.rect(screen, (255, 0, 0), [x[0], x[1], snake_block, snake_block])
@@ -43,6 +42,13 @@ snake_speed = 15
 
 foodx = round(random.randrange(0, 600 - snake_block) / 10.0) * 10.0
 foody = round(random.randrange(0, 400 - snake_block) / 10.0) * 10.0
+
+superfoodx = round(random.randrange(0, 600 - snake_block) / 10.0) * 10.0
+superfoody = round(random.randrange(0, 400 - snake_block) / 10.0) * 10.0
+
+time_delay = 5000
+timer_event = pygame.USEREVENT + 1
+pygame.time.set_timer(timer_event, time_delay)
 
 while not game_over:
 
@@ -73,6 +79,9 @@ while not game_over:
             elif event.key == pygame.K_DOWN and y1_change >= 0:
                 y1_change = snake_block
                 x1_change = 0
+        if event.type == pygame.USEREVENT + 1:
+            superfoodx = round(random.randrange(0, 600 - snake_block) / 10.0) * 10.0
+            superfoody = round(random.randrange(0, 400 - snake_block) / 10.0) * 10.0
 
     if x1 >= 600 or x1 < 0 or y1 >= 400 or y1 < 0:
         game_close = True
@@ -80,6 +89,8 @@ while not game_over:
     y1 += y1_change
     screen.fill((255, 255, 255))
     pygame.draw.rect(screen, (0, 255, 0), [foodx, foody, snake_block, snake_block])
+    pygame.draw.rect(screen, (0, 255, 255), [superfoodx, superfoody, snake_block, snake_block])
+
     snake_Head = []
     snake_Head.append(x1)
     snake_Head.append(y1)
@@ -100,6 +111,14 @@ while not game_over:
         foodx = round(random.randrange(0, 600 - snake_block) / 10.0) * 10.0
         foody = round(random.randrange(0, 400 - snake_block) / 10.0) * 10.0
         Length_of_snake += 1
+        if (level != (Length_of_snake - 1) // 5 + 1):
+            snake_speed = snake_speed + 10
+        level = (Length_of_snake - 1) // 5 + 1
+
+    if x1 == superfoodx and y1 == superfoody:
+        superfoodx = round(random.randrange(0, 600 - snake_block) / 10.0) * 10.0
+        superfoody = round(random.randrange(0, 400 - snake_block) / 10.0) * 10.0
+        Length_of_snake += 2
         if (level != (Length_of_snake - 1) // 5 + 1):
             snake_speed = snake_speed + 10
         level = (Length_of_snake - 1) // 5 + 1
