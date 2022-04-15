@@ -17,6 +17,9 @@ def main():
     rect = False
     circ = False
     drag_start = False
+
+    order = []
+    queue = 0
     
 
     while True:
@@ -72,12 +75,10 @@ def main():
                     position = event.pos
                     circ_start_x, circ_start_y = position
                     drag_start = True
-                    # print ("START", rect_start_x, rect_start_y)
                 elif event.type == pygame.MOUSEMOTION and drag_start:
                     position = event.pos
                     circ_finish_x, circ_finish_y = position
                     
-                    # print ("FINISH", rect_finish_x, rect_finish_y)
                     if mode == 'blue':
                         color = (0, 0, 255)
                     elif mode == 'red':
@@ -86,7 +87,8 @@ def main():
                         color = (0, 255, 0)
                     if len(obj) > 0: 
                         obj.pop()
-                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0))
+                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0, queue))
+                    queue += 1
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     position = event.pos
@@ -99,7 +101,8 @@ def main():
                         color = (255, 0, 0)
                     elif mode == 'green':
                         color = (0, 255, 0)
-                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0))
+                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0, queue))
+                    queue += 1
 
             if rect:
                 if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
@@ -107,11 +110,9 @@ def main():
                     rect_start_x, rect_start_y = position
                     drag_start = True
                     
-                    # print ("START", rect_start_x, rect_start_y)
                 elif event.type == pygame.MOUSEMOTION and drag_start:
                     position = event.pos
                     rect_finish_x, rect_finish_y = position
-                    # print ("FINISH", rect_finish_x, rect_finish_y)
                     if mode == 'blue':
                         color = (0, 0, 255)
                     elif mode == 'red':
@@ -122,7 +123,8 @@ def main():
                     cor = sorted(cor)
                     if len(obj) > 0: 
                         obj.pop()
-                    obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1))
+                    obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1, queue))
+                    queue += 1
                     
                 elif event.type == pygame.MOUSEBUTTONUP:
                     position = event.pos
@@ -137,15 +139,16 @@ def main():
                         color = (0, 255, 0)
                     cor = [(rect_start_x, rect_start_y), (rect_finish_x, rect_finish_y)]
                     cor = sorted(cor)
-                    obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1))
+                    obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1, queue))
+                    queue += 1
                     
 
             if eraser:
                 if event.type == pygame.MOUSEMOTION:
                     # if mouse moved, add point to list
                     position = event.pos
-                    points = points + [(position, 'white')]
-                    # points = points[-256:] 
+                    points = points + [(position, 'white', queue)]
+                    queue += 1
 
             # if event.type == pygame.MOUSEBUTTONUP:
             if drawer: 
@@ -157,24 +160,38 @@ def main():
                 if event.type == pygame.MOUSEMOTION:
                     # if mouse moved, add point to list
                     position = event.pos
-                    points = points + [(position, mode)]
+                    points = points + [(position, mode, queue)]
+                    queue += 1
                     # points = points[-256:]
                 
         screen.fill((255, 255, 255))
         
         # draw all points
         i = 0
-        while i < len(obj):
-            if obj[i][2]:
-                pygame.draw.rect(screen, obj[i][1], obj[i][0])
-            else:
-                pygame.draw.ellipse(screen, obj[i][1], obj[i][0])
-            i += 1
-
-        i = 0
-        while i < len(points) - 1:
-            drawLineBetween(screen,points[i], points[i + 1], radius)
-            i += 1
+        j = 0
+        for k in range(queue):
+            if i < len(obj) and j < len(points) - 1:
+                if obj[i][3] < points[j][2]:
+                    if obj[i][2]:
+                        pygame.draw.rect(screen, obj[i][1], obj[i][0])
+                    else:
+                        pygame.draw.ellipse(screen, obj[i][1], obj[i][0])
+                    i += 1
+                else:
+                    drawLineBetween(screen,points[j], points[j + 1], radius)
+                    j += 1
+            
+            if i < len(obj) and not j < len(points) - 1:
+                while i < len(obj):
+                    if obj[i][2]:
+                        pygame.draw.rect(screen, obj[i][1], obj[i][0])
+                    else:
+                        pygame.draw.ellipse(screen, obj[i][1], obj[i][0])
+                    i += 1
+            if not i < len(obj) and j < len(points) - 1:
+                while j < len(points) - 1:
+                    drawLineBetween(screen,points[j], points[j + 1], radius)
+                    j += 1
         
         
 
