@@ -72,8 +72,8 @@ class Coin1(pygame.sprite.Sprite):
 class Coin5(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("Lab_9/Coin.png")
-        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.image.load("Lab_9/diamond.png")
+        self.image = pygame.transform.scale(self.image, (30, 30))
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40,SCREEN_WIDTH-40), 0)
         
