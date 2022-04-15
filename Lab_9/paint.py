@@ -1,4 +1,8 @@
+from math import sqrt
 import pygame
+
+def triangle_height(a, b):
+    return sqrt((b - a)**2 - ((b - a) // 2)**2)
 
 def main():
     pygame.init()
@@ -13,8 +17,9 @@ def main():
     drawer = True
     rect = False
     circ = False
-    rhombus = False
+    rhomb = False
     square = False
+    eq_triangle = False
     drag_start = False
 
     queue = 0
@@ -47,43 +52,64 @@ def main():
                     mode = 'green'
                 elif event.key == pygame.K_b:
                     mode = 'blue'
+                #Eraser
                 elif event.key == pygame.K_e:
                     eraser = True
                     drawer = False
                     rect = False
                     circ = False
                     square = False
-                    rhombus = False
+                    rhomb = False
+                    eq_triangle = False
+                #Drawer
                 elif event.key == pygame.K_d:
                     drawer = True
                     eraser = False
                     rect = False
                     circ = False
                     square = False
-                    rhombus = False
+                    rhomb = False
+                    eq_triangle = False
+                #Draw rectangle
                 elif event.key == pygame.K_1:
                     rect = True
                     drawer = False
                     eraser = False
                     circ = False
                     square = False
-                    rhombus = False
+                    rhomb = False
+                    eq_triangle = False
+                #Draw circle
                 elif event.key == pygame.K_2:
                     circ = True
                     drawer = False
                     eraser = False
                     rect = False
                     square = False
-                    rhombus = False
+                    rhomb = False
+                    eq_triangle = False
+                #Draw square
                 elif event.key == pygame.K_3:
                     square = True
                     circ = False
                     drawer = False
                     eraser = False
                     rect = False
-                    rhombus = False
+                    rhomb = False
+                    eq_triangle = False
+                #Draw rhombus
                 elif event.key == pygame.K_4:
-                    rhombus = True
+                    rhomb = True
+                    square = False
+                    circ = False
+                    drawer = False
+                    eraser = False
+                    rect = False
+                    eq_triangle = False
+                #Draw equilateral triangle
+                elif event.key == pygame.K_5:
+                    eq_triangle = True
+                    rhomb = False
                     square = False
                     circ = False
                     drawer = False
@@ -201,7 +227,7 @@ def main():
                     obj.append((pygame.Rect(cor[0][0], cor[0][1], min(cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), min(cor[1][0]-cor[0][0], cor[1][1]-cor[0][1])), color, 1, queue))
                     queue += 1
 
-            if rhombus:
+            if rhomb:
                 if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
                     position = event.pos
                     rh_start_x, rh_start_y = position
@@ -232,6 +258,39 @@ def main():
                     elif mode == 'green':
                         color = (0, 255, 0)
                     obj.append(([((rh_finish_x + rh_start_x) // 2, rh_start_y), (rh_start_x, (rh_finish_y + rh_start_y) // 2), ((rh_finish_x + rh_start_x) // 2, rh_finish_y), (rh_finish_x, (rh_finish_y + rh_start_y) // 2)], color, 2, queue))
+                    queue += 1
+
+            if eq_triangle:
+                if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
+                    position = event.pos
+                    eq_tr_start_x, eq_tr_start_y = position
+                    drag_start = True
+                    
+                elif event.type == pygame.MOUSEMOTION and drag_start:
+                    position = event.pos
+                    eq_tr_finish_x, eq_tr_finish_y = position
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    if len(obj) > 0: 
+                        obj.pop()
+                    obj.append(([((eq_tr_finish_x + eq_tr_start_x) // 2, eq_tr_start_y), (eq_tr_start_x, eq_tr_start_y + triangle_height(eq_tr_start_x, eq_tr_finish_x)), (eq_tr_finish_x, eq_tr_start_y + triangle_height(eq_tr_start_x, eq_tr_finish_x))], color, 2, queue))
+                    queue += 1
+                    
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    eq_tr_finish_x, eq_tr_finish_y = position
+                    drag_start = False
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    obj.append(([((eq_tr_finish_x + eq_tr_start_x) // 2, eq_tr_start_y), (eq_tr_start_x, eq_tr_start_y + triangle_height(eq_tr_start_x, eq_tr_finish_x)), (eq_tr_finish_x, eq_tr_start_y + triangle_height(eq_tr_start_x, eq_tr_finish_x))], color, 2, queue))
                     queue += 1
 
             if eraser:
@@ -297,25 +356,25 @@ def main():
         clock.tick(60)
 
 def drawLineBetween(screen, start, end, width):
+    if (start[1] == end[1]):
+        if start[1] == 'blue':
+            color = (0, 0, 255)
+        elif start[1] == 'red':
+            color = (255, 0, 0)
+        elif start[1] == 'green':
+            color = (0, 255, 0)
+        elif start[1] == 'white':
+            color = (255, 255, 255)
     
-    if start[1] == 'blue':
-        color = (0, 0, 255)
-    elif start[1] == 'red':
-        color = (255, 0, 0)
-    elif start[1] == 'green':
-        color = (0, 255, 0)
-    elif start[1] == 'white':
-        color = (255, 255, 255)
-    
-    dx = start[0][0] - end[0][0]
-    dy = start[0][1] - end[0][1]
-    iterations = max(abs(dx), abs(dy))
-    
-    for i in range(iterations):
-        progress = 1.0 * i / iterations
-        aprogress = 1 - progress
-        x = int(aprogress * start[0][0] + progress * end[0][0])
-        y = int(aprogress * start[0][1] + progress * end[0][1])
-        pygame.draw.circle(screen, color, (x, y), width)
+        dx = start[0][0] - end[0][0]
+        dy = start[0][1] - end[0][1]
+        iterations = max(abs(dx), abs(dy))
+        
+        for i in range(iterations):
+            progress = 1.0 * i / iterations
+            aprogress = 1 - progress
+            x = int(aprogress * start[0][0] + progress * end[0][0])
+            y = int(aprogress * start[0][1] + progress * end[0][1])
+            pygame.draw.circle(screen, color, (x, y), width)
 
 main()
