@@ -1,7 +1,4 @@
-from operator import truediv
 import pygame
-
-
 
 def main():
     pygame.init()
@@ -16,9 +13,10 @@ def main():
     drawer = True
     rect = False
     circ = False
+    rhombus = False
+    square = False
     drag_start = False
 
-    order = []
     queue = 0
     
 
@@ -54,18 +52,40 @@ def main():
                     drawer = False
                     rect = False
                     circ = False
+                    square = False
+                    rhombus = False
                 elif event.key == pygame.K_d:
                     drawer = True
                     eraser = False
                     rect = False
                     circ = False
+                    square = False
+                    rhombus = False
                 elif event.key == pygame.K_1:
                     rect = True
                     drawer = False
                     eraser = False
                     circ = False
+                    square = False
+                    rhombus = False
                 elif event.key == pygame.K_2:
                     circ = True
+                    drawer = False
+                    eraser = False
+                    rect = False
+                    square = False
+                    rhombus = False
+                elif event.key == pygame.K_3:
+                    square = True
+                    circ = False
+                    drawer = False
+                    eraser = False
+                    rect = False
+                    rhombus = False
+                elif event.key == pygame.K_4:
+                    rhombus = True
+                    square = False
+                    circ = False
                     drawer = False
                     eraser = False
                     rect = False
@@ -87,7 +107,7 @@ def main():
                         color = (0, 255, 0)
                     if len(obj) > 0: 
                         obj.pop()
-                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0, queue))
+                    obj.append((pygame.Rect(circ_start_x, circ_start_y, min(circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), min(circ_finish_x-circ_start_x, circ_finish_y-circ_start_y)), color, 0, queue))
                     queue += 1
 
                 elif event.type == pygame.MOUSEBUTTONUP:
@@ -101,7 +121,7 @@ def main():
                         color = (255, 0, 0)
                     elif mode == 'green':
                         color = (0, 255, 0)
-                    obj.append((pygame.Rect(circ_start_x, circ_start_y, circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), color, 0, queue))
+                    obj.append((pygame.Rect(circ_start_x, circ_start_y, min(circ_finish_x-circ_start_x, circ_finish_y-circ_start_y), min(circ_finish_x-circ_start_x, circ_finish_y-circ_start_y)), color, 0, queue))
                     queue += 1
 
             if rect:
@@ -141,7 +161,78 @@ def main():
                     cor = sorted(cor)
                     obj.append((pygame.Rect(cor[0][0], cor[0][1], cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), color, 1, queue))
                     queue += 1
+            
+            if square:
+                if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
+                    position = event.pos
+                    sq_start_x, sq_start_y = position
+                    drag_start = True
                     
+                elif event.type == pygame.MOUSEMOTION and drag_start:
+                    position = event.pos
+                    sq_finish_x, sq_finish_y = position
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    cor = [(sq_start_x, sq_start_y), (sq_finish_x, sq_finish_y)]
+                    cor = sorted(cor)
+                    if len(obj) > 0: 
+                        obj.pop()
+                    obj.append((pygame.Rect(cor[0][0], cor[0][1], min(cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), min(cor[1][0]-cor[0][0], cor[1][1]-cor[0][1])), color, 1, queue))
+                    queue += 1
+                    
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    sq_finish_x, sq_finish_y = position
+                    drag_start = False
+                    # print("START", sq_start_x, sq_start_y)
+                    # print ("FINISH", sq_finish_x, sq_finish_y)
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    cor = [(sq_start_x, sq_start_y), (sq_finish_x, sq_finish_y)]
+                    cor = sorted(cor)
+                    obj.append((pygame.Rect(cor[0][0], cor[0][1], min(cor[1][0]-cor[0][0], cor[1][1]-cor[0][1]), min(cor[1][0]-cor[0][0], cor[1][1]-cor[0][1])), color, 1, queue))
+                    queue += 1
+
+            if rhombus:
+                if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
+                    position = event.pos
+                    rh_start_x, rh_start_y = position
+                    drag_start = True
+                    
+                elif event.type == pygame.MOUSEMOTION and drag_start:
+                    position = event.pos
+                    rh_finish_x, rh_finish_y = position
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    if len(obj) > 0: 
+                        obj.pop()
+                    obj.append(([((rh_finish_x + rh_start_x) // 2, rh_start_y), (rh_start_x, (rh_finish_y + rh_start_y) // 2), ((rh_finish_x + rh_start_x) // 2, rh_finish_y), (rh_finish_x, (rh_finish_y + rh_start_y) // 2)], color, 2, queue))
+                    queue += 1
+                    
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    rh_finish_x, rh_finish_y = position
+                    drag_start = False
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    obj.append(([((rh_finish_x + rh_start_x) // 2, rh_start_y), (rh_start_x, (rh_finish_y + rh_start_y) // 2), ((rh_finish_x + rh_start_x) // 2, rh_finish_y), (rh_finish_x, (rh_finish_y + rh_start_y) // 2)], color, 2, queue))
+                    queue += 1
 
             if eraser:
                 if event.type == pygame.MOUSEMOTION:
@@ -172,10 +263,12 @@ def main():
         for k in range(queue):
             if i < len(obj) and j < len(points) - 1:
                 if obj[i][3] < points[j][2]:
-                    if obj[i][2]:
+                    if obj[i][2] == 1:
                         pygame.draw.rect(screen, obj[i][1], obj[i][0])
-                    else:
+                    elif obj[i][2] == 0:
                         pygame.draw.ellipse(screen, obj[i][1], obj[i][0])
+                    elif obj[i][2] == 2:
+                        pygame.draw.polygon(screen, obj[i][1], obj[i][0])
                     i += 1
                 else:
                     drawLineBetween(screen,points[j], points[j + 1], radius)
@@ -183,10 +276,13 @@ def main():
             
             if i < len(obj) and not j < len(points) - 1:
                 while i < len(obj):
-                    if obj[i][2]:
+                    if obj[i][2] == 1:
                         pygame.draw.rect(screen, obj[i][1], obj[i][0])
-                    else:
+                    elif obj[i][2] == 0:
                         pygame.draw.ellipse(screen, obj[i][1], obj[i][0])
+                    elif obj[i][2] == 2:
+                        print(obj[i][0])
+                        pygame.draw.polygon(screen, obj[i][1], obj[i][0])
                     i += 1
             if not i < len(obj) and j < len(points) - 1:
                 while j < len(points) - 1:
