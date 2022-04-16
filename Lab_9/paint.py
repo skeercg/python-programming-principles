@@ -20,6 +20,7 @@ def main():
     rhomb = False
     square = False
     eq_triangle = False
+    right_triangle = False
     drag_start = False
 
     queue = 0
@@ -61,6 +62,7 @@ def main():
                     square = False
                     rhomb = False
                     eq_triangle = False
+                    right_triangle = False
                 #Drawer
                 elif event.key == pygame.K_d:
                     drawer = True
@@ -70,6 +72,7 @@ def main():
                     square = False
                     rhomb = False
                     eq_triangle = False
+                    right_triangle = False
                 #Draw rectangle
                 elif event.key == pygame.K_1:
                     rect = True
@@ -79,6 +82,7 @@ def main():
                     square = False
                     rhomb = False
                     eq_triangle = False
+                    right_triangle = False
                 #Draw circle
                 elif event.key == pygame.K_2:
                     circ = True
@@ -88,6 +92,7 @@ def main():
                     square = False
                     rhomb = False
                     eq_triangle = False
+                    right_triangle = False
                 #Draw square
                 elif event.key == pygame.K_3:
                     square = True
@@ -97,6 +102,7 @@ def main():
                     rect = False
                     rhomb = False
                     eq_triangle = False
+                    right_triangle = False
                 #Draw rhombus
                 elif event.key == pygame.K_4:
                     rhomb = True
@@ -106,9 +112,20 @@ def main():
                     eraser = False
                     rect = False
                     eq_triangle = False
+                    right_triangle = False
                 #Draw equilateral triangle
                 elif event.key == pygame.K_5:
                     eq_triangle = True
+                    rhomb = False
+                    square = False
+                    circ = False
+                    drawer = False
+                    eraser = False
+                    rect = False
+                    right_triangle = False
+                elif event.key == pygame.K_6:
+                    right_triangle = True
+                    eq_triangle = False
                     rhomb = False
                     square = False
                     circ = False
@@ -291,6 +308,39 @@ def main():
                     elif mode == 'green':
                         color = (0, 255, 0)
                     obj.append(([((eq_tr_finish_x + eq_tr_start_x) // 2, eq_tr_start_y), (eq_tr_start_x, eq_tr_start_y + triangle_height(eq_tr_start_x, eq_tr_finish_x)), (eq_tr_finish_x, eq_tr_start_y + triangle_height(eq_tr_start_x, eq_tr_finish_x))], color, 2, queue))
+                    queue += 1
+
+            if right_triangle:
+                if event.type == pygame.MOUSEBUTTONDOWN and not drag_start:
+                    position = event.pos
+                    rg_tr_start_x, rg_tr_start_y = position
+                    drag_start = True
+                    
+                elif event.type == pygame.MOUSEMOTION and drag_start:
+                    position = event.pos
+                    rg_tr_finish_x, rg_tr_finish_y = position
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    if len(obj) > 0: 
+                        obj.pop()
+                    obj.append(([(rg_tr_start_x, rg_tr_start_y), (rg_tr_start_x, rg_tr_finish_y), (rg_tr_finish_x, rg_tr_finish_y)], color, 2, queue))
+                    queue += 1
+                    
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = event.pos
+                    rg_tr_finish_x, rg_tr_finish_y = position
+                    drag_start = False
+                    if mode == 'blue':
+                        color = (0, 0, 255)
+                    elif mode == 'red':
+                        color = (255, 0, 0)
+                    elif mode == 'green':
+                        color = (0, 255, 0)
+                    obj.append(([(rg_tr_start_x, rg_tr_start_y), (rg_tr_start_x, rg_tr_finish_y), (rg_tr_finish_x, rg_tr_finish_y)], color, 2, queue))
                     queue += 1
 
             if eraser:
