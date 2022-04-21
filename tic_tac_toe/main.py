@@ -17,12 +17,11 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 # Images
-X_IMAGE = pygame.transform.scale(pygame.image.load("tic_tac_toe/x.png"), (80, 80))
-O_IMAGE = pygame.transform.scale(pygame.image.load("tic_tac_toe/o.png"), (80, 80))
+X_IMAGE = pygame.transform.scale(pygame.image.load("x.png"), (80, 80))
+O_IMAGE = pygame.transform.scale(pygame.image.load("o.png"), (80, 80))
 
 # Fonts
 END_FONT = pygame.font.SysFont('arial', 40)
-
 
 def draw_grid():
     gap = WIDTH // ROWS
@@ -54,12 +53,93 @@ def initialize_grid():
 
     return game_array
 
+game_array = initialize_grid()
+
+def minimax(game_state, depth, turn):
+    if who_won(game_state) == 'o':
+        return 2
+    elif who_won(game_state) == 'x':
+        return -1
+    elif drawn(game_state):
+        return 1
+    
+    if turn == 'o':
+        best_score = -999999
+        for i in range(len(game_state)):
+            for j in range(len(game_state[i])):
+                x, y, char, can_play = game_state[i][j]
+                if can_play:
+                    game_state[i][j] = (x, y, 'o', False)
+                    score = minimax(game_state, depth + 1, 'x')
+                    game_state[i][j] = (x, y, '', True)
+                    best_score = max(best_score, score)
+    else:
+        best_score = +999999
+        for i in range(len(game_state)):
+            for j in range(len(game_state[i])):
+                x, y, char, can_play = game_state[i][j]
+                if can_play:
+                    game_state[i][j] = (x, y, 'x', False)
+                    score = minimax(game_state, depth + 1, 'o')
+                    game_state[i][j] = (x, y, '', True)
+                    best_score = min(best_score, score)
+    return best_score
+    
+
+def drawn(game_array):
+    for i in range(len(game_array)):
+        for j in range(len(game_array[i])):
+            if game_array[i][j][2] == "":
+                return False
+
+    return True
+                    
+def who_won(game_array):
+    for row in range(len(game_array)):
+        if (game_array[row][0][2] == game_array[row][1][2] == game_array[row][2][2]) and game_array[row][0][2] != "":
+            return game_array[row][0][2]
+
+    # Checking columns
+    for col in range(len(game_array)):
+        if (game_array[0][col][2] == game_array[1][col][2] == game_array[2][col][2]) and game_array[0][col][2] != "":
+            return game_array[0][col][2]
+
+    # Checking main diagonal
+    if (game_array[0][0][2] == game_array[1][1][2] == game_array[2][2][2]) and game_array[0][0][2] != "":
+        return game_array[0][0][2]
+
+    # Checking reverse diagonal
+    if (game_array[0][2][2] == game_array[1][1][2] == game_array[2][0][2]) and game_array[0][2][2] != "":
+        return game_array[0][2][2]
+
+    return 'none'
+
+        
+
+
 
 def click(game_array):
     global x_turn, o_turn, images
 
     # Mouse position
     m_x, m_y = pygame.mouse.get_pos()
+
+    if o_turn:
+        max_winning = 0
+        for i in range(len(game_array)):
+            for j in range(len(game_array[i])):
+                x, y, char, can_play = game_array[i][j]
+                if can_play:
+                    game_array[i][j] = (x, y, 'o', False)
+                    if max_winning < minimax(game_array, 0, 'x'):
+                        max_winning = minimax(game_array, 0, 'x')
+                        m_x = x
+                        m_y = y
+                    game_array[i][j] = (x, y, '', True)
+
+
+
+
 
     for i in range(len(game_array)):
         for j in range(len(game_array[i])):
@@ -152,19 +232,18 @@ def main():
     x_turn = True
     o_turn = False
 
-    game_array = initialize_grid()
-
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                click(game_array)
+            if event.type == pygame.MOUSEBUTTONDOWN or o_turn:
+                    click(game_array)
 
         render()
 
         if has_won(game_array) or has_drawn(game_array):
             run = False
+            pygame.quit()
 
 
 while True:
