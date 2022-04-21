@@ -55,7 +55,7 @@ def initialize_grid():
 
 game_array = initialize_grid()
 
-def minimax(game_state, depth, turn):
+def minimax(game_state, turn):
     if who_won(game_state) == 'o':
         return 2
     elif who_won(game_state) == 'x':
@@ -70,7 +70,7 @@ def minimax(game_state, depth, turn):
                 x, y, char, can_play = game_state[i][j]
                 if can_play:
                     game_state[i][j] = (x, y, 'o', False)
-                    score = minimax(game_state, depth + 1, 'x')
+                    score = minimax(game_state, 'x')
                     game_state[i][j] = (x, y, '', True)
                     best_score = max(best_score, score)
     else:
@@ -80,7 +80,7 @@ def minimax(game_state, depth, turn):
                 x, y, char, can_play = game_state[i][j]
                 if can_play:
                     game_state[i][j] = (x, y, 'x', False)
-                    score = minimax(game_state, depth + 1, 'o')
+                    score = minimax(game_state, 'o')
                     game_state[i][j] = (x, y, '', True)
                     best_score = min(best_score, score)
     return best_score
@@ -131,8 +131,8 @@ def click(game_array):
                 x, y, char, can_play = game_array[i][j]
                 if can_play:
                     game_array[i][j] = (x, y, 'o', False)
-                    if max_winning < minimax(game_array, 0, 'x'):
-                        max_winning = minimax(game_array, 0, 'x')
+                    if max_winning < minimax(game_array, 'x'):
+                        max_winning = minimax(game_array, 'x')
                         m_x = x
                         m_y = y
                     game_array[i][j] = (x, y, '', True)
