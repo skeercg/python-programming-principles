@@ -42,8 +42,21 @@ try:
     #     UPDATE SET phone = EXCLUDED.phone""", (name, phone,)
     # )
 
+    # n = 2
+    # names = ['Dias', 'Askar']
+    # phones = ['87779992233', '76667777182']
+
     # cursor.execute(
-    #     """"""
+    #     """DO $$
+    #     DECLARE
+    #         names VARCHAR(50)[] := %s;
+    #         phones VARCHAR(50)[] := %s;
+    #     BEGIN
+    #         FOR i IN 1..%s LOOP
+    #             INSERT INTO unique_phonebook (name, phone)
+    #             VALUES (names[i], phones[i]);
+    #         END LOOP;
+    #     END; $$""", (names, phones, n,)
     # )
 
     # limit = 5
