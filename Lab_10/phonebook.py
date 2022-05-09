@@ -32,7 +32,11 @@ try:
     #     )
 
     # cursor.execute(
-    #     """COPY phonebook(id, name, phone) 
+    #     """ALTER SEQUENCE phonebook_id_seq RESTART WITH 1"""
+    # )
+
+    # cursor.execute(
+    #     """COPY phonebook(name, phone) 
     #     FROM '/Users/khas/Documents/codes/pp2/Lab_10/phones.csv' 
     #     WITH (FORMAT CSV, DELIMITER ',', HEADER)"""
     #     )
