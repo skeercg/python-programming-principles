@@ -1,11 +1,12 @@
 import psycopg2
+import phonebook_config
 
 try: 
     connection = psycopg2.connect(
-        dbname = 'phonebook', 
-        user = 'khas', 
-        password = '', 
-        host = 'localhost'
+        dbname = phonebook_config.dbname, 
+        user = phonebook_config.user, 
+        password = phonebook_config.password, 
+        host = phonebook_config.host
     )
 
     connection.autocommit = True

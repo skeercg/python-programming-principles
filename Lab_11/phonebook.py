@@ -1,12 +1,13 @@
 from tkinter import OFF
 import psycopg2
+import config
 
 try: 
     connection = psycopg2.connect(
-        dbname = 'phonebook', 
-        user = 'khas', 
-        password = '', 
-        host = 'localhost'
+        dbname = config.dbname, 
+        user = config.user, 
+        password = config.password, 
+        host = config.host
     )
 
     connection.autocommit = True
