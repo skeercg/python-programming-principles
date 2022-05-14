@@ -98,7 +98,7 @@ try:
                 """SELECT EXISTS(SELECT * FROM snake WHERE name = %s)""", (username,)
                 )
             exists = cursor.fetchone()
-            if exists[0] != 'False':
+            if exists[0] != False:
                 cursor.execute(
                     """SELECT score FROM snake WHERE name = %s;""", (username,)
                 )
@@ -117,14 +117,15 @@ try:
 
         
             game_over = font.render("Game Over", True, (0, 0, 0))
-            cursor.execute(
-                """SELECT * FROM snake;"""
-            )
-            db_data = cursor.fetchall()
-            best_score = font.render("0", True, (0, 0, 0))
-            for data in db_data:
-                if data[1] == username:
-                    best_score = font_small.render('Your best score: ' + str(data[2]), True, (0, 0, 0))
+            if ttl <= 0:
+                cursor.execute(
+                    """SELECT * FROM snake;"""
+                )
+                db_data = cursor.fetchall()
+                best_score = font.render("0", True, (0, 0, 0))
+                for data in db_data:
+                    if data[1] == username:
+                        best_score = font_small.render('Your best score: ' + str(data[2]), True, (0, 0, 0))
             
             if ttl > 0:
                 screen.fill((255, 0, 0))
