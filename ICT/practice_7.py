@@ -32,7 +32,7 @@ print(total)
 # 4.Sorting 
 
 numbers = [54, 6, 23, 1, 5, 98]
-numbers = sorted(numbers)
+numbers.sort()
 for i in numbers:
     print(i, end=' ')
 
@@ -57,5 +57,6 @@ while True:
 print('Here is the final shopping list:')
 for i in shoppingList:
     print('-', i)
+print('Goodbye !')
 
 
