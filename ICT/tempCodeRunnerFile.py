@@ -1,7 +1,16 @@
+jokeNotebook = {
+#     'Best joke ever': 'Why shouldn’t you eat clowns? They taste funny.'
+# }
 
-# for i in range(1, 21):
-#     numbers.append(i)
+# while True:
+#     jokeName = input('Give a name to your joke: ')
+#     if jokeName == 'stop':
+#         break
 
-# for i in numbers:
-#     if i % 2 == 0:
-#         print(i, end=' ')
+#     jokeContent = input('Tell me your joke: ')
+
+#     jokeNotebook[jokeName] = jokeContent
+
+# print('Here are the jokes:')
+# for key in jokeNotebook:
+#     print(f'Joke title: {key}. Jok
